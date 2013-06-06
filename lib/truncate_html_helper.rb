@@ -56,6 +56,11 @@ module TruncateHtmlHelper
       raise ::TruncateHtmlHelper::InvalidHtml, "Could not fixup invalid html. #{e.message}" if fixed_up == input
       input = fixed_up
       retry
+    rescue Encoding::CompatibilityError => e
+      previous = input.clone
+      input.force_encoding('ASCII-8BIT')
+      raise ::TruncateHtmlHelper::InvalidHtml, "Could not fix encoding of html. #{e.message}" if previous == input
+      retry
     end
   end
 
