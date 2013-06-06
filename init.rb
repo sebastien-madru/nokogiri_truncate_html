@@ -1,3 +1,5 @@
 require 'truncate_html_helper'
 
-ActionView::Base.send :include, TruncateHtmlHelper
+if defined?(ActionView::Base)
+  ActionView::Base.send :include, TruncateHtmlHelper
+end

@@ -1,4 +1,5 @@
 require "rexml/parsers/pullparser"
+require 'active_support/core_ext/module/attribute_accessors.rb'
 
 module TruncateHtmlHelper
   # raised when tags could not be fixed up by nokogiri

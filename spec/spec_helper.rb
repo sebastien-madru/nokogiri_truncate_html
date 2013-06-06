@@ -3,7 +3,7 @@ __DIR__ = File.dirname(__FILE__)
 
 require 'rubygems'
 
-require 'rails/all'
+require 'active_support'
 $LOAD_PATH << "#{__DIR__}/../lib"
 require "#{__DIR__}/../init"
 
