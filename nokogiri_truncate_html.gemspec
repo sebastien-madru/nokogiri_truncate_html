@@ -11,10 +11,10 @@ Gem::Specification.new do |gem|
   gem.summary       = gem.description
   gem.homepage      = "https://github.com/Springest/truncate_html"
 
-  gem.files         = `git ls-files`.split($/)
+  gem.files         = ['lib/nokogiri_truncate_html.rb'] #`git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ["lib"]
+  gem.require_paths = ['lib']
 
   gem.add_dependency "nokogiri", "~> 1.5.8"
   gem.add_dependency "activesupport", "~> 3.2.13"

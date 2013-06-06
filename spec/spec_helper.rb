@@ -5,7 +5,7 @@ require 'rubygems'
 
 require 'active_support'
 $LOAD_PATH << "#{__DIR__}/../lib"
-require "#{__DIR__}/../init"
+require "#{__DIR__}/../lib/nokogiri_truncate_html"
 
 require 'rspec'
 
