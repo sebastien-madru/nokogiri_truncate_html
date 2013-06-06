@@ -1,5 +1,6 @@
 # encoding: utf-8
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
+require 'active_support/core_ext/benchmark'
 
 describe NokogiriTruncateHtml::TruncateHtmlHelper do
   include NokogiriTruncateHtml::TruncateHtmlHelper
@@ -53,21 +54,11 @@ describe NokogiriTruncateHtml::TruncateHtmlHelper do
     truncate_html("30's").should == "30's"
   end
 
-  describe "when TruncateHtmlHelper.flavor = 'xhtml1'" do
-    before do
-      NokogiriTruncateHtml::TruncateHtmlHelper.flavor = 'xhtml1'
-    end
-
-    after do
-      NokogiriTruncateHtml::TruncateHtmlHelper.flavor = 'html4'
-    end
-
-    it "should convert ' to &apos;" do
-      truncate_html("30's").should == "30&apos;s"
-    end
-
-    it "should translate across the atlantic" do
-      NokogiriTruncateHtml::TruncateHtmlHelper.flavor.should == 'xhtml1'
+  describe 'benchmark' do
+    let(:test_string) { File.read('spec/fixtures/index.html') }
+    subject { Benchmark.ms { 100.times { |a| truncate_html(test_string, length: a*5) } } / 100 }
+    it 'is faster than 1.5ms' do
+      should be < 1.5
     end
   end
 end

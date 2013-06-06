@@ -4,10 +4,8 @@ require 'nokogiri_truncate_html/truncate_document'
 
 module NokogiriTruncateHtml
   module TruncateHtmlHelper
-    # you may set this to either 'html4', or 'xhtml1'
-    mattr_accessor :flavor
-
-    self.flavor = 'html4'
+    mattr_accessor :parser
+    mattr_accessor :document
 
     # Truncates html respecting tags and html entities.
     #
@@ -17,6 +15,9 @@ module NokogiriTruncateHtml
     #  truncate_html '<p>Hello <strong>World</strong></p>', :length => 7 # => '<p>Hello <strong>W&hellip;</strong></p>'
     #  truncate_html '<p>Hello &amp; Goodbye</p>', :length => 7          # => '<p>Hello &amp;&hellip;</p>'
     def truncate_html(input, *args)
+      self.document ||= TruncateDocument.new#(TruncateHtmlHelper.flavor) #, length, omission)
+      self.parser ||= Nokogiri::HTML::SAX::Parser.new(document)
+
       # support both 2.2 & earlier APIs
       options = args.extract_options!
       length = options[:length] || args[0] || 30
@@ -24,10 +25,13 @@ module NokogiriTruncateHtml
 
       # Adding div around the input is a hack. It gets removed in TruncateDocument.
       input = "<div>#{input}</div>"
-      document = TruncateDocument.new(TruncateHtmlHelper.flavor, length, omission)
-      parser = Nokogiri::HTML::SAX::Parser.new(document)
-      parser.parse_memory(input)
-      document.output.html_safe
+      self.document.length = length
+      self.document.omission = omission
+      begin
+        self.parser.parse_memory(input)
+      rescue TruncateFinished
+      end
+      self.document.output.html_safe
     end
   end
 end

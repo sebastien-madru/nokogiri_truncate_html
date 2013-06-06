@@ -1,14 +1,32 @@
 require 'nokogiri'
+require 'cgi'
 
 module NokogiriTruncateHtml
+  class TruncateFinished < Exception
+  end
+
   class TruncateDocument < Nokogiri::XML::SAX::Document
-    def initialize(flavor='html4', length, omission)
-      @encoder = HTMLEntities.new(flavor)
-      @length, @omission = length, omission
+
+    def initialize
+      # We use the xhtml "flavour" so that we can decode
+      # apostrophes. That is the only difference between
+      # xhtml1 and html4.
+      @encoder = HTMLEntities.new('xhtml1')
       @discard_first_element = false
     end
 
+    def length=(length)
+      @length = length
+    end
+
+    def omission=(omission)
+      @omission = omission
+    end
+
     def output
+      while @tags.size > 0
+        @output << "</#{@tags.pop}>"
+      end
       @output
     end
 
@@ -18,36 +36,31 @@ module NokogiriTruncateHtml
     end
 
     def characters(string)
-      return if @chars_remaining < 0
       text = @encoder.decode(string)
-      if text.length <= @chars_remaining
-        @output << @encoder.encode(text)
-      else
-        @output << @encoder.encode(text[0, @chars_remaining])
-      end
+      @output << CGI.escapeHTML(text[0, @chars_remaining])
       @chars_remaining -= text.length
-      @output << @omission if @chars_remaining < 0
+      if @chars_remaining < 0
+        @output << @omission
+        raise TruncateFinished 
+      end
     end
 
     def start_element(name, attrs = [])
-      return if %w(html body).include? name
-      return @discard_first_element = true unless @discard_first_element
-      return if @chars_remaining <= 0
-      @output << tag_to_string(name, attrs)
-      @tags.push name unless self_closing?(name)
+      unless @discard_first_element
+        return if %w(html body).include? name
+        return @discard_first_element = true
+      end
+
+      if %w(br embed hr img input param).include? name
+        @output << "<#{name}#{' ' if attrs.size > 0 }#{attrs.map { |attr,val| "#{attr}=\"#{val}\"" }.join(' ')} />"
+      else
+        @output << "<#{name}#{' ' if attrs.size > 0 }#{attrs.map { |attr,val| "#{attr}=\"#{val}\"" }.join(' ')}>"
+        @tags.push name
+      end
     end
 
     def end_element(name)
       @output << "</#{@tags.pop}>" if @tags.last == name
-    end
-
-    private
-    def tag_to_string(name, attrs)
-      "<#{name}#{' ' if attrs.size > 0}#{attrs.map { |attr,val| "#{attr}=\"#{val}\"" }.join(' ')}#{' /' if self_closing?(name)}>"
-    end
-
-    def self_closing?(name)
-      %w(br embed hr img input param).include? name
     end
   end
 end
