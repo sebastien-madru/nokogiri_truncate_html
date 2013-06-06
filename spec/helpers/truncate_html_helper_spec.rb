@@ -38,7 +38,7 @@ describe TruncateHtmlHelper do
 
       with_length_should_equal 7, '<p>Hello &amp;&hellip;</p>'
       with_length_should_equal 9, '<p>Hello &amp; <span class="foo">G&hellip;</span></p>'
-      with_length_should_equal 18, '<p>Hello &amp; <span class="foo">Goodbye</span> <br></br> H&hellip;</p>'
+      with_length_should_equal 18, '<p>Hello &amp; <span class="foo">Goodbye</span> <br /> H&hellip;</p>'
     end
 
     describe '(incorrect) html: <p>Hello <strong>World</p><div>And Hi, length: ' do
@@ -51,11 +51,6 @@ describe TruncateHtmlHelper do
 
   it "should not convert ' to &apos; (html4 compat)" do
     truncate_html("30's").should == "30's"
-  end
-
-  it "should support chinese comma" do
-    pending
-    truncate_html("年，，年，，年，，年，，年，，",6).should == "年，&hellip;"
   end
 
   describe "when TruncateHtmlHelper.flavour = 'xhtml1'" do
