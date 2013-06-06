@@ -1,8 +1,8 @@
 # encoding: utf-8
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
 
-describe TruncateHtmlHelper do
-  include TruncateHtmlHelper
+describe NokogiriTruncateHtml::TruncateHtmlHelper do
+  include NokogiriTruncateHtml::TruncateHtmlHelper
 
   describe "examples from Rails doc" do
     it "'Once upon a time in a world far far away'" do
@@ -53,13 +53,13 @@ describe TruncateHtmlHelper do
     truncate_html("30's").should == "30's"
   end
 
-  describe "when TruncateHtmlHelper.flavour = 'xhtml1'" do
+  describe "when TruncateHtmlHelper.flavor = 'xhtml1'" do
     before do
-      TruncateHtmlHelper.flavour = 'xhtml1'
+      NokogiriTruncateHtml::TruncateHtmlHelper.flavor = 'xhtml1'
     end
 
     after do
-      TruncateHtmlHelper.flavour = 'html4'
+      NokogiriTruncateHtml::TruncateHtmlHelper.flavor = 'html4'
     end
 
     it "should convert ' to &apos;" do
@@ -67,7 +67,7 @@ describe TruncateHtmlHelper do
     end
 
     it "should translate across the atlantic" do
-      TruncateHtmlHelper.flavor.should == 'xhtml1'
+      NokogiriTruncateHtml::TruncateHtmlHelper.flavor.should == 'xhtml1'
     end
   end
 end

@@ -1,11 +1,9 @@
 require 'active_support/core_ext/module/attribute_accessors.rb'
+require 'active_support/core_ext/string/output_safety'
 require 'nokogiri_truncate_html/truncate_document'
 
 module NokogiriTruncateHtml
   module TruncateHtmlHelper
-    mattr_accessor :parser
-    mattr_accessor :document
-
     # you may set this to either 'html4', or 'xhtml1'
     mattr_accessor :flavor
 
@@ -26,13 +24,10 @@ module NokogiriTruncateHtml
 
       # Adding div around the input is a hack. It gets removed in TruncateDocument.
       input = "<div>#{input}</div>"
-      self.parser ||=
-        begin
-          self.document = TruncateDocument.new(TruncateHtmlHelper.flavor, length, omission)
-          Nokogiri::HTML::SAX::Parser.new(document)
-        end
-      self.parser.parse_memory(input)
-      self.document.output
+      document = TruncateDocument.new(TruncateHtmlHelper.flavor, length, omission)
+      parser = Nokogiri::HTML::SAX::Parser.new(document)
+      parser.parse_memory(input)
+      document.output.html_safe
     end
   end
 end
