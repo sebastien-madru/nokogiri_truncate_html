@@ -1,4 +1,6 @@
-TruncateHtml is just like the vanilla truncate rails helper, except it respects tags and html entities, and returns valid html.
+== NokogiriTruncateHtml
+
+NokogiriTruncateHtml is just like the vanilla truncate rails helper, except it respects tags and html entities, and returns valid html.
 
 Nokogiri and HtmlEntities are used for the parsing.
 
