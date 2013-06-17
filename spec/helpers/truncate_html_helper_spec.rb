@@ -56,7 +56,7 @@ describe NokogiriTruncateHtml::TruncateHtmlHelper do
 
   describe 'benchmark' do
     let(:test_string) { File.read('spec/fixtures/index.html') }
-    subject { Benchmark.ms { 100.times { |a| truncate_html(test_string, length: a*5) } } / 100 }
+    subject { Benchmark.ms { 100.times { |a| truncate_html(test_string, length: a*50) } } / 100 }
     it 'is faster than 1.5ms' do
       should be < 1.5
     end
