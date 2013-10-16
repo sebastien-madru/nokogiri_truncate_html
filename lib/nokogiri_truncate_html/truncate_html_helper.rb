@@ -27,9 +27,8 @@ module NokogiriTruncateHtml
       input = "<div>#{input}</div>"
       self.document.length = length
       self.document.omission = omission
-      begin
+      catch(:truncate_finished) do
         self.parser.parse_memory(input)
-      rescue TruncateFinished
       end
       self.document.output.html_safe
     end

@@ -41,7 +41,7 @@ module NokogiriTruncateHtml
       @chars_remaining -= text.length
       if @chars_remaining < 0
         @output << @omission
-        raise TruncateFinished 
+        throw :truncate_finished
       end
     end
 
