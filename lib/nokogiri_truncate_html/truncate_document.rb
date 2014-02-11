@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'cgi'
+require 'htmlentities'
 
 module NokogiriTruncateHtml
   class TruncateFinished < Exception
