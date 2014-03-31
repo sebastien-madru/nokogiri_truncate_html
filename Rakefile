@@ -2,7 +2,7 @@
 rspec_base = File.expand_path(File.dirname(__FILE__) + '/../rspec/lib')
 $LOAD_PATH.unshift(rspec_base) if File.exist?(rspec_base) and !$LOAD_PATH.include?(rspec_base)
 
-require 'rcov'
+#require 'rcov'
 require 'rspec/core/rake_task'
 
 PluginName = "truncate_html"
